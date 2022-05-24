@@ -24,7 +24,11 @@ const {
   createCurrencyInformation,
   updateCurrecnyInformation,
   getCurrencyInfo,
-  updateCurrencyIcon
+  updateCurrencyIcon,
+  insertExRate,
+  updateExRate,
+  deleteExRate,
+  getExRate
 } = require("./Routes/exchangeRate");
 const {
   addBranch,
@@ -33,6 +37,7 @@ const {
   updateBranch,
   getSpecificBranch,
 } = require("./Routes/branch");
+const { postNews, getNews, updateNews, deleteNews } = require("./Routes/news");
 router.get("/", (req, res) => {
   res.send("working!");
   console.log("get working");
@@ -60,13 +65,13 @@ router.post("/updateBranch", signupValidation, (req, res, next) =>
 router.get("/getSpecificBranch", (req, res) => getSpecificBranch(req, res, db));
 
 //coursel
-router.post("/courselAdd", upload, (req, res, next) =>
+router.post("/courselAdd", upload("Resources/coursel"), (req, res, next) =>
   courselAdd(req, res, next, db)
 );
 router.post("/deleteCoursel", signupValidation, (req, res, next) =>
   courselDelete(req, res, next, db)
 );
-router.post("/courselImgUpdate", upload, (req, res, next) =>
+router.post("/courselImgUpdate", upload("Resources/coursel"), (req, res, next) =>
   courselImgUpdate(req, res, next, db)
 );
 router.post("/courselUpdate", signupValidation, (req, res, next) =>
@@ -76,21 +81,35 @@ router.post("/courselUpdate", signupValidation, (req, res, next) =>
 router.get("/courselGetAll", (req, res) => getAllCoursel(req, res, db));
 //getCurrencyInfo
 
-router.post("/createCurrencyInformation", upload, (req, res, next) =>
+router.post("/createCurrencyInformation", upload("Resources/currency"), (req, res, next) =>
   createCurrencyInformation(req, res, next, db)
 );
 
 router.post("/updateCurrecnyInformation", signupValidation, (req, res, next) =>
   updateCurrecnyInformation(req, res, next, db)
 );
-router.post("/updateCurrencyIcon", upload, (req, res, next) =>
-updateCurrencyIcon(req, res, next, db)
-);
+router.post("/updateCurrencyIcon", upload("Resources/currency"), (req, res, next) =>
+  updateCurrencyIcon(req, res, next, db)
+);bcrypt
 router.post("/deleteCurrencyInformation", signupValidation, (req, res, next) =>
   deleteCurrencyInformation(req, res, next, db)
 );
 
 router.get("/getCurrencyInfo", (req, res) => getCurrencyInfo(req, res, db));
+
+
+router.post("/insertExRate", signupValidation,(req, res, next) =>insertExRate(req,res, next, db));
+
+router.post("/updateExRate", signupValidation, (req, res, next)=>updateExRate(req, res, next, db));
+router.post("/deleteExRate", signupValidation, (req, res, next)=>deleteExRate(req,res, next, db));
+router.get("/getExRate",(req, res)=>getExRate(req, res, db));
+
+//News
+router.post("/postNews",upload("Resources/news"),signupValidation, (req, res, next) =>postNews(req, res, next, db));
+router.get("/getNews",(req, res)=>getNews(req, res, db));
+router.post("/updateNews",upload("Resources/news"), (req, res,next)=>updateNews(req, res, next, db));
+router.post("/deleteNews", signupValidation, (req, res, next) =>deleteNews(req, res, next, db)
+);
 
 router.post("/register", signupValidation, (req, res, next) => {
   db.query(
