@@ -41,7 +41,7 @@ const updateNews = (req, res, next, db) => {
   //arguments oldImgPath and record id
   
   if(!("/"+req.file.path===req.body.oldImgPath))  { fs.unlink(req.body.oldImgPath.slice(1), (err) => {
-    if (err) console.log(err);
+    if (err) return res.status(404).send( err);
     else {
       db.query(
         `UPDATE news
@@ -62,7 +62,21 @@ const updateNews = (req, res, next, db) => {
   });
 }
 else{
-    return res.status(201).send({ msg: 'already exists'})
+  db.query(
+    `UPDATE news
+           SET insertionDate=now(),title="${req.body.title}",description="${req.body.description}" where id=${req.body.id}`,
+    (err, result) => {
+      if (err) {
+        throw err;
+        return res.status(400).send({
+          msg: err,
+        });
+      }
+      return res.status(201).send({
+        msg: "icon updated",
+      });
+    }
+  );
 }
 
 };
