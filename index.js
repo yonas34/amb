@@ -7,7 +7,15 @@ const {routesWeb,routesInteractive} = require('./routes.js');
 const apicache = require('apicache');
 let cache = apicache.middleware;
 const app = express();
+const https = require("https");
+const fs = require("fs");
 
+const options={
+  key: fs.readFileSync("./keys/key.pem"),
+      cert: fs.readFileSync("./keys/server.crt"),
+}
+
+const apps=https.createServer(options,app);
 var corsOptions = {
   origin: "http://localhost:3000"
 };
@@ -43,4 +51,4 @@ app.use((err, req, res, next) => {
     });
 });
  
-app.listen(3000,() => console.log(__dirname));
+apps.listen(3000,() => console.log(__dirname));
