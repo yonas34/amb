@@ -30,7 +30,9 @@ app.use(bodyParser.urlencoded({
  
 app.use('/api', routesWeb);
 app.use('/userInteraction',routesInteractive);
- 
+ app.get('/',(req,res) => {
+   res.status(200).send('AMHARA BANK BACK END API DEVELOPMENT');
+ })
 // Handling Errors
 app.use((err, req, res, next) => {
     // console.log(err);
